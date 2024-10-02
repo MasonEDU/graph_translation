@@ -50,17 +50,21 @@ public class Main {
                     int firstOpenVertex = open.iterator().next();
                     open.remove(firstOpenVertex);
                     System.out.println("Popped " + firstOpenVertex + " from open");
+                    if (firstOpenVertex < componentNumber.length) {  // Bounds check because it was erroring
+                                        closed.add(firstOpenVertex);
+                                        System.out.println("Added " + firstOpenVertex + " to closed");
+                                        componentNumber[firstOpenVertex] = vertexNotInComponent;
 
-                    closed.add(firstOpenVertex);
-                    System.out.println("Added " + firstOpenVertex + " to closed");
-                    componentNumber[firstOpenVertex] = vertexNotInComponent;
-
-                    for (Vertex neighborVertex : g.vertexList().get(firstOpenVertex).getAdjacent()) {
-                        if (!closed.contains(neighborVertex.getVertexNumber()) && !open.contains(neighborVertex.getVertexNumber())) {
-                            System.out.println("Adding " + neighborVertex.getVertexNumber() + " to open");
-                            open.add(neighborVertex.getVertexNumber());
-                        }
-                    }
+                                        for (Vertex neighborVertex : g.vertexList().get(firstOpenVertex).getAdjacent()) {
+                                            if (!closed.contains(neighborVertex.getVertexNumber()) && !open.contains(neighborVertex.getVertexNumber())) {
+                                                System.out.println("Adding " + neighborVertex.getVertexNumber() + " to open");
+                                                open.add(neighborVertex.getVertexNumber());
+                                            }
+                                        }
+                                    } else {
+                                        //catch statement incase out of bounds
+                                        System.err.println("Error: Vertex index out of bounds: " + firstOpenVertex);
+                                    }
                 }
             }
         } while (foundComponent);
